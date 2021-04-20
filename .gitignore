@@ -33,6 +33,7 @@ speed-measure-plugin*.json
 
 # misc
 /.sass-cache
+/.storybook
 /connect.lock
 /coverage
 /libpeerconnection.log
@@ -44,3 +45,7 @@ testem.log
 # System Files
 .DS_Store
 Thumbs.db
+
+
+*.iml
+

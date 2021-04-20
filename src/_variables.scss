@@ -1,0 +1,31 @@
+$primary1: #aaee55;
+$primary2: orangered;
+
+
+$pseudoWhite: #FAFAFF;
+
+$secondary1: green;
+$secondary2: darkred;
+
+
+$lighter1: #ccffaa;
+$lighter2: pink;
+
+
+.plump {
+
+  border-top: none;
+  border-left: none;
+  border-bottom: solid 2px;
+  border-right: solid 2px;
+
+}
+
+
+.hollow {
+  border-top: solid 2px $lighter2;
+  border-left: solid 2px $lighter2;
+  border-bottom: none $lighter1;
+  border-right: none $lighter1;
+
+}

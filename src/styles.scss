@@ -1,0 +1,53 @@
+/* You can add global styles to this file, and also import other style files */
+@import './variables';
+
+
+
+
+
+
+button {
+  @extend .plump;
+  border-color: $primary2;
+  display: block;
+  max-width: 50%;
+  text-decoration: none;
+  color: darkgreen;
+  padding: 10px;
+  background-color: $pseudoWhite;
+  margin: 10px auto 10px auto;
+  border-radius: 5px;
+  font-size: 16px
+}
+
+button:hover {
+  border-bottom: solid 2px;
+  border-right: solid 2px;
+  border-color: $primary1;
+  background-color: white;
+  transition: border-color 0.5s;
+
+}
+
+body {
+  background-color: $pseudoWhite;
+  font-family: monospace ;
+  color: darkgreen;
+}
+
+
+
+label {
+  cursor:pointer;
+}
+li {
+  display: block;
+  margin-bottom: 10px;
+}
+ul {
+  margin: 0;
+}
+
+
+html, body { height: 100%; font-size: 16px}
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
