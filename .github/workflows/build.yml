@@ -1,0 +1,50 @@
+name: Build
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - name: Use Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 14.15.3
+      - uses: nelonoel/branch-name@v1.0.1
+      - name: Build branch
+        run: |
+          echo ${BRANCH_NAME}
+      - name: Download front dependancies
+        run: |
+
+          cd website
+          npm install -g @angular/cli
+          npm install -g angular-cli-ghpages
+          npm install tone
+          yarn install
+      - name: list front dependancies downloaded
+        run: |
+          cd website
+          echo "npm package installed:"
+          find ./node_modules -type f -name 'package.json' |sort
+          echo "npm package installed in gamRules:"
+          find ./node_modules/gameRules -type f -name 'package.json' |sort
+          ls -lrt ./node_modules/tone
+      - name: Build front
+        run: |
+          ng build --prod --base-href /labyrinth-game/website/${BRANCH_NAME}/website-angular/
+          ls dist
+          cp ./dist/website-angular/index.html ./dist/website-angular/404.html
+          mkdir ./website
+          mkdir ./website/${BRANCH_NAME}
+          mv ./dist/website-angular/ ./website/${BRANCH_NAME}
+      - name: Deploy
+        if: success()
+        uses: crazy-max/ghaction-github-pages@v2
+        with:
+          target_branch: gh-pages
+          build_dir: website
+          keep_history: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
