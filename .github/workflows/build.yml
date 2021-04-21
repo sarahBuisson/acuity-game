@@ -23,17 +23,9 @@ jobs:
           npm install -g angular-cli-ghpages
           npm install tone
           yarn install
-      - name: list front dependancies downloaded
-        run: |
-          cd website
-          echo "npm package installed:"
-          find ./node_modules -type f -name 'package.json' |sort
-          echo "npm package installed in gamRules:"
-          find ./node_modules/gameRules -type f -name 'package.json' |sort
-          ls -lrt ./node_modules/tone
       - name: Build front
         run: |
-          ng build --prod --base-href /labyrinth-game/website/${BRANCH_NAME}/website-angular/
+          ng build --prod --base-href /${BRANCH_NAME}/website-angular/
           ls dist
           cp ./dist/website-angular/index.html ./dist/website-angular/404.html
           mkdir ./website
