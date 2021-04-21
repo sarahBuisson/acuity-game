@@ -25,10 +25,10 @@ jobs:
         run: |
           ng build --prod --base-href /${BRANCH_NAME}/short-em-cut/
           ls dist
-          cp ./dist/acuity/index.html ./dist/acuity/404.html
+          cp ./dist/short-em-cut/index.html ./dist/short-em-cut/404.html
           mkdir ./website
           mkdir ./website/${BRANCH_NAME}
-          mv ./dist/acuity/ ./website/${BRANCH_NAME}
+          mv ./dist/short-em-cut/ ./website/${BRANCH_NAME}
       - name: Deploy
         if: success()
         uses: crazy-max/ghaction-github-pages@v2
