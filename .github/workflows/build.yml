@@ -23,12 +23,12 @@ jobs:
           yarn install
       - name: Build front
         run: |
-          ng build --prod --base-href /${BRANCH_NAME}/website-angular/
+          ng build --prod --base-href /${BRANCH_NAME}/short-em-cut/
           ls dist
-          cp ./dist/website-angular/index.html ./dist/website-angular/404.html
+          cp ./dist/acuity/index.html ./dist/acuity/404.html
           mkdir ./website
           mkdir ./website/${BRANCH_NAME}
-          mv ./dist/website-angular/ ./website/${BRANCH_NAME}
+          mv ./dist/acuity/ ./website/${BRANCH_NAME}
       - name: Deploy
         if: success()
         uses: crazy-max/ghaction-github-pages@v2
