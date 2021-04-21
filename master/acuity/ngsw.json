@@ -1,0 +1,73 @@
+{
+  "configVersion": 1,
+  "timestamp": 1618995384965,
+  "index": "/master/short-em-cut/index.html",
+  "assetGroups": [
+    {
+      "name": "app",
+      "installMode": "prefetch",
+      "updateMode": "prefetch",
+      "cacheQueryOptions": {
+        "ignoreVary": true
+      },
+      "urls": [
+        "/master/short-em-cut/favicon.ico",
+        "/master/short-em-cut/index.html",
+        "/master/short-em-cut/main.5fdfd7f0a4ea1d6f44df.js",
+        "/master/short-em-cut/manifest.webmanifest",
+        "/master/short-em-cut/polyfills.918bfd9e2b7365f19867.js",
+        "/master/short-em-cut/runtime.442d6bd8409cee682c44.js",
+        "/master/short-em-cut/styles.b22a6576516b9983e4e9.css"
+      ],
+      "patterns": []
+    },
+    {
+      "name": "assets",
+      "installMode": "lazy",
+      "updateMode": "prefetch",
+      "cacheQueryOptions": {
+        "ignoreVary": true
+      },
+      "urls": [
+        "/master/short-em-cut/assets/svg/pause.svg",
+        "/master/short-em-cut/assets/svg/play.svg",
+        "/master/short-em-cut/pause.f7ff2b711b74d823cc6d.svg",
+        "/master/short-em-cut/play.982a5e57316e2262b92c.svg"
+      ],
+      "patterns": []
+    }
+  ],
+  "dataGroups": [],
+  "hashTable": {
+    "/master/short-em-cut/assets/svg/pause.svg": "bb0899a7e54f4dace4a6358cba453943fc03c38f",
+    "/master/short-em-cut/assets/svg/play.svg": "78f14d0a4043690c101ed8641ff24c32f1c31a95",
+    "/master/short-em-cut/favicon.ico": "22f6a4a3bcaafafb0254e0f2fa4ceb89e505e8b2",
+    "/master/short-em-cut/index.html": "9e0aa03af877aababd1fb85b5841c32c7144ea3c",
+    "/master/short-em-cut/main.5fdfd7f0a4ea1d6f44df.js": "c1cccaa7b82b85aa737f518607ab98ffede853c6",
+    "/master/short-em-cut/manifest.webmanifest": "ccccb4f314f4b03a9986059b42b4dcb3419e6f27",
+    "/master/short-em-cut/pause.f7ff2b711b74d823cc6d.svg": "bb0899a7e54f4dace4a6358cba453943fc03c38f",
+    "/master/short-em-cut/play.982a5e57316e2262b92c.svg": "78f14d0a4043690c101ed8641ff24c32f1c31a95",
+    "/master/short-em-cut/polyfills.918bfd9e2b7365f19867.js": "cfe7b0b53e96bff9ba384b4d497c08475a617d62",
+    "/master/short-em-cut/runtime.442d6bd8409cee682c44.js": "a9aafcf49f49145093fc831efd9b8e2f6c71bb9c",
+    "/master/short-em-cut/styles.b22a6576516b9983e4e9.css": "c7a4a4219019b60989548d47b95a5f37d9bb23df"
+  },
+  "navigationUrls": [
+    {
+      "positive": true,
+      "regex": "^\\/.*$"
+    },
+    {
+      "positive": false,
+      "regex": "^\\/(?:.+\\/)?[^/]*\\.[^/]*$"
+    },
+    {
+      "positive": false,
+      "regex": "^\\/(?:.+\\/)?[^/]*__[^/]*$"
+    },
+    {
+      "positive": false,
+      "regex": "^\\/(?:.+\\/)?[^/]*__[^/]*\\/.*$"
+    }
+  ],
+  "navigationRequestStrategy": "performance"
+}
