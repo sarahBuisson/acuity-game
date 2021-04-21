@@ -17,8 +17,6 @@ jobs:
           echo ${BRANCH_NAME}
       - name: Download front dependancies
         run: |
-
-          cd website
           npm install -g @angular/cli
           npm install -g angular-cli-ghpages
           npm install tone
