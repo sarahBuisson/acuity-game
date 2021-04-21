@@ -1,12 +1,11 @@
 import {Component, HostListener, OnInit} from '@angular/core';
-import { Wanted, WantedClick, WantedComposite, WantedKeyPress} from '../../../domain/model';
+import {Wanted, WantedClick, WantedComposite, WantedKeyPress} from '../../../domain/model';
 import {IntervalService} from '../interval.service';
 import {AbstractWantComponent} from '../want/want-abstract.component';
 
 @Component({
-  selector: 'app-want-composite',
+  selector: 'app-want-shortcut',
   template: `
-
     <div class="main" (click)="ngClick($event)">
       <ng-container *ngFor="let wantedPart of want.wanteds;  index as index">
         <span *ngIf="index!=0">+</span>
@@ -27,7 +26,7 @@ import {AbstractWantComponent} from '../want/want-abstract.component';
     width: 300px;
   }`]
 })
-export class WantCompositeComponent extends AbstractWantComponent<WantedComposite> implements OnInit {
+export class WantShortcutComponent extends AbstractWantComponent<WantedComposite> implements OnInit {
 
 
   stillWanted: Wanted[] = new Array<Wanted>();
@@ -43,7 +42,9 @@ export class WantCompositeComponent extends AbstractWantComponent<WantedComposit
   setPartDone(wanted: Wanted): () => void {
     return () => {
       wanted.isCurrentlySatisfied = true;
-      this.isDone(wanted);
+      this.intervalService.setTimeout(1000, () => {
+        wanted.isCurrentlySatisfied = false;
+      }, this);
       if (this.want.wanteds.every(w => w.isCurrentlySatisfied)) {
         this.isDone(this.want);
         console.log('partdone');

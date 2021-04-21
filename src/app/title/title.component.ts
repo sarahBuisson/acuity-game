@@ -3,15 +3,16 @@ import {Component, HostBinding, Input, OnInit} from '@angular/core';
 @Component({
   selector: 'app-title',
   template: `<h1>
-    <span class="othercolor">T</span>
-    <span>est </span>
-    <span>Yo</span>
-    <span class="othercolor">Ur </span>
-    <span>Acu</span>
-    <span class="othercolor">R</span>
-    <span>atY </span>
+    <span class="othercolor">S</span>
+    <span>hort </span>
+    <span>'</span>
+    <span class="othercolor">e</span>
+    <span>m </span>
+    <span class="othercolor">C</span>
+    <span>ut </span>
     <span class="othercolor">!</span>
-  </h1>`,
+  </h1>
+  <h2>Do the short-cut the quickest you can !</h2>`,
   styleUrls: ['./title.component.scss']
 })
 export class TitleComponent implements OnInit {

@@ -1,17 +1,17 @@
 import {Component, HostListener, OnInit} from '@angular/core';
-import {WantedKeyPress} from '../../../domain/model';
+import {WantedText} from '../../../domain/model';
 import {IntervalService} from '../interval.service';
 import {AbstractWantComponent} from '../want/want-abstract.component';
 
 @Component({
-  selector: 'app-want-key',
+  selector: 'app-want-text',
   template: `
-    <div class="key plump" [ngStyle]="{backgroundColor:backgroundColor} ">{{keyLabel()}}</div>
+    <div class="hollow" [ngStyle]="{backgroundColor:backgroundColor} ">{{want.text}}</div>
   `,
-
-  styleUrls: ['./want-key.scss']
+  styleUrls: ['./want-text.scss']
 })
-export class WantKeyComponent extends AbstractWantComponent<WantedKeyPress> implements OnInit {
+export class WantTextComponent extends AbstractWantComponent<WantedText> implements OnInit {
+  private currentText = '';
 
 
   constructor(intervalService: IntervalService) {
@@ -29,6 +29,9 @@ export class WantKeyComponent extends AbstractWantComponent<WantedKeyPress> impl
 
   @HostListener('document:keydown', ['$event'])
   handleKeyboardDownEvent($event: KeyboardEvent): void {
+    if ($event.key.length === 1) {
+      this.currentText += $event.key;
+    }
     this.process($event);
   }
 
@@ -38,18 +41,9 @@ export class WantKeyComponent extends AbstractWantComponent<WantedKeyPress> impl
 
   }
 
-  public maybeDone($event: Event): boolean {
-    return $event instanceof KeyboardEvent && $event.key === this.want.key;
-  }
 
-  keyLabel(): string {
-    if (this.want.key.length === 1) {
-      return this.want.key.toUpperCase();
-    } else {
-      switch (this.want.key) {
-        default:
-          return this.want.key;
-      }
-    }
+
+  public maybeDone($event: Event): boolean {
+    return $event instanceof KeyboardEvent && this.currentText.endsWith(this.want.text);
   }
 }

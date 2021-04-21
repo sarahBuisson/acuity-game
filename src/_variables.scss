@@ -12,6 +12,9 @@ $lighter1: #ccffaa;
 $lighter2: pink;
 
 
+$emptyZone: 50px;
+$borderWidth: 5px;
+
 .plump {
 
   border-top: none;
@@ -27,5 +30,17 @@ $lighter2: pink;
   border-left: solid 2px $lighter2;
   border-bottom: none $lighter1;
   border-right: none $lighter1;
+
+}
+
+.bordered {
+  border: solid $borderWidth;
+  border-radius: $emptyZone;
+  padding: $emptyZone;
+
+  border-bottom-color: $lighter1;
+  border-right-color: $lighter1;
+  border-top-color: $lighter2;
+  border-left-color: $lighter2;
 
 }

@@ -3,9 +3,14 @@ import {Component, OnInit} from '@angular/core';
 @Component({
   selector: 'app-menu',
   template: `
-    <app-title></app-title>
-    <button routerLink="standardParty">Play !</button>
-    <button routerLink="new">Custom party...</button>`,
+    <div>
+      <app-title></app-title>
+
+      <div class="bordered menu">
+        <button routerLink="play">Play !</button>
+        <button routerLink="new">Custom party...</button>
+      </div>
+    </div>`,
 
   styleUrls: ['./menu.component.scss']
 })

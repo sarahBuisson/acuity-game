@@ -7,24 +7,13 @@
 }
 
 
-$emptyZone: 50px;
-$borderWidth: 5px;
-.bordered {
-  border: solid $borderWidth;
-  border-bottom-color: $lighter1;
-  border-right-color: $lighter1;
-  border-top-color: $lighter2;
-  border-left-color: $lighter2;
-  border-radius: $emptyZone;
-}
 .bordered-invert {
-  border: solid 2px;
+  @extend .hollow;
+  border: 2px;
   border-radius: 2px;
-  border-bottom-color: $lighter2;
-  border-right-color: $lighter2;
   border-top-color: $lighter1;
   border-left-color: $lighter1;
-  padding: 3px;
+  padding: 5px;
   background: $pseudoWhite;
 }
 
@@ -51,7 +40,6 @@ $borderWidth: 5px;
 
   width: 140px;
   height: 160px;
-  display: inline-block;
   position: absolute;
   left: 100%;
   border-left: none;
@@ -60,6 +48,10 @@ $borderWidth: 5px;
   background: white;
   bottom: -$borderWidth;
   text-align: right;
+  display: inline-flex;
+  flex-direction: column;
+  justify-content: space-around;
+  margin: 0px;
 }
 
 .button-pause {
@@ -67,4 +59,8 @@ $borderWidth: 5px;
 }
 .button-play {
   background: url("../../assets/svg/pause.svg") no-repeat 10% 50% ;
+}
+
+li {
+  display: block;
 }

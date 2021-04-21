@@ -1,7 +1,7 @@
 import {ChangeDetectorRef, Component, HostListener, Input, NgZone, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
 import {GameService} from './game.service';
 import {Subscription} from 'rxjs';
-import { PartyRunner, Wanted, WantedClick, WantedComposite, WantedKeyPress, WantedShortCut} from '../../domain/model';
+import {PartyRunner, Wanted, WantedClick, WantedComposite, WantedKeyPress, WantedShortCut, WantedText} from '../../domain/model';
 import {StoreService} from '../store.service';
 import {IntervalService} from './interval.service';
 
@@ -25,17 +25,26 @@ import {IntervalService} from './interval.service';
             [isDone]="isDone(wanted)"
           ></app-want-key>
 
+          <app-want-shortcut *ngIf="isWantedShortcut(wanted)"
+
+                             [want]="wanted"
+                             [isDone]="isDone(wanted)"
+          ></app-want-shortcut>
+
           <app-want-composite *ngIf="isWantedComposite(wanted)"
 
                               [want]="wanted"
                               [isDone]="isDone(wanted)"
           ></app-want-composite>
+
+          <app-want-text *ngIf="isWantedText(wanted)"
+
+                         [want]="wanted"
+                         [isDone]="isDone(wanted)"
+          ></app-want-text>
         </app-want-wrapper>
         <ul class="toolbar">
-          <li>
-            <button (click)="togglePause()"
-                    [class]="{'button-pause':pause,'button-play':!pause}">{{pause ? ' play' : 'stop' }}</button>
-          </li>
+
           <li> score:
             <span class="bordered-invert"> {{score}}</span>
           </li>
@@ -43,9 +52,17 @@ import {IntervalService} from './interval.service';
             object:
             <span class="bordered-invert">{{stillWanted.length}}</span>
           </li>
+          <li>
+            missed:
+            <span class="bordered-invert">{{missed}}</span>
+          </li>
+          <li>
+            <button (click)="togglePause()"
+                    [class]="{'button-pause':pause,'button-play':!pause}">{{pause ? ' play' : 'stop' }}</button>
+          </li>
         </ul>
       </div>
-
+      <app-score [score]="score" [missed]="missed" *ngIf="isPartyLost()"></app-score>
     </div>`,
 
   styleUrls: ['./game.scss']
@@ -58,6 +75,7 @@ export class GameComponent implements OnInit, OnDestroy, OnChanges {
 
   pause = false;
   score = 0;
+  missed = 0;
 
   stillWanted: Wanted[] = new Array<Wanted>();
   playerInput: Event[] = new Array<Event>();
@@ -84,16 +102,17 @@ export class GameComponent implements OnInit, OnDestroy, OnChanges {
       this.currentParty = this.store.currentParty;
     }
     this.subscription = this.currentParty.flow.subscribe((next) => {
-      if (!this.pause) {
+      if (!this.pause && !this.isPartyLost()) {
         this.stillWanted.push(next);
       }
     });
     this.store.currentParty.run();
 
     this.intervalService.setInterval(10, () => {
-      if (!this.pause) {
+      if (!this.pause && !this.isPartyLost()) {
         this.stillWanted.forEach(w => w.time += 10);
       }
+      this.missed += this.stillWanted.filter(w => w.time >= w.timeout).length;
       this.stillWanted = this.stillWanted.filter(w => w.time < w.timeout);
       this.ref.detectChanges();
     }, this);
@@ -129,7 +148,21 @@ export class GameComponent implements OnInit, OnDestroy, OnChanges {
 
   }
 
+  isWantedShortcut(wanted: Wanted): boolean {
+    return wanted instanceof WantedShortCut;
+
+  }
+
+  isWantedText(wanted: Wanted): boolean {
+    return wanted instanceof WantedText;
+
+  }
+
   togglePause(): void {
     this.pause = !this.pause;
+  }
+
+  isPartyLost(): boolean {
+    return this.missed >= this.currentParty.maxMissed;
   }
 }

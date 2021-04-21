@@ -1,13 +1,16 @@
 @import '../../variables';
-h1 {
-  text-align: center;
-  font-size: large;
-  padding: 20px;
-  color: $primary2
+
+li {
+  display: block;
+  margin-bottom: 10px;
 }
 
-h1::first-letter {
-  color: $primary1
-
+ul {
+  margin: 0;
 }
 
+.menu {
+  max-width: 50%;
+  margin:  $emptyZone auto;
+  padding: $emptyZone;
+}

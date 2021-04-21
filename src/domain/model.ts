@@ -1,4 +1,4 @@
-import { Subject} from 'rxjs';
+import {Subject} from 'rxjs';
 
 export abstract class Wanted {
   private PisCurrentlySatisfied = false;
@@ -28,6 +28,7 @@ export abstract class Wanted {
 
 export class WantedClick extends Wanted {
   public label = 'click';
+
   constructor(public range = 100) {
     super();
   }
@@ -49,20 +50,33 @@ export class WantedKeyPress extends Wanted {
   }
 }
 
-export class WantedShortCut extends Wanted {
-  label = 'shortcut';
+export class WantedText extends Wanted {
+  label = 'write';
 
-  constructor(public keys: string[]) {
+  constructor(public text: string) {
     super();
   }
 
   clone(): Wanted {
-    return new WantedShortCut(this.keys);
+    return new WantedText(this.text);
   }
 }
 
 export class WantedComposite extends Wanted {
+  label = '';
+
+  constructor(public wanteds: Wanted[]) {
+    super();
+  }
+
+  clone(): Wanted {
+    return new WantedComposite(this.wanteds);
+  }
+}
+
+export class WantedShortCut extends Wanted {
   label = 'shortcut';
+
   public get isCurrentlySatisfied(): boolean {
     return this.wanteds.every(wanted => wanted.isCurrentlySatisfied);
   }
@@ -76,7 +90,7 @@ export class WantedComposite extends Wanted {
   }
 
   clone(): Wanted {
-    return new WantedComposite(this.wanteds.map(w => w.clone()));
+    return new WantedShortCut(this.wanteds.map(w => w.clone()));
   }
 }
 
@@ -99,9 +113,10 @@ export class PartyConfig {
 
 export class Party extends PartyConfig {
 
-  minTimeout = 500;
-  maxTimeout = 3000;
-
+  minTimeout = 2000;
+  maxTimeout = 20000;
+  minBetween = 500;
+  maxBetween = 3000;
   possibleKeys: Array<Wanted> = new Array<Wanted>();
   possibleCharacters: Array<Wanted> = new Array<Wanted>();
   possibleClics: Array<Wanted> = new Array<Wanted>();
@@ -134,7 +149,7 @@ export function initPartyRunner(config: PartyConfig): PartyRunner {
     config.shortCut.forEach((s) => {
       if (s instanceof Array) {
         party.possibleShortcut
-          .push(new WantedShortCut(s));
+          .push(new WantedShortCut(s.map(w => new WantedKeyPress(w))));
       }
     });
   }
@@ -143,24 +158,38 @@ export function initPartyRunner(config: PartyConfig): PartyRunner {
     const firstKey = party.random(party.possibleKeys);
     party.possibleShortcut
       .push(
-        new WantedComposite([
+        new WantedShortCut([
           firstKey.clone(),
           party.random(party.possibleKeys.filter(k => k !== firstKey)).clone()]));
+    party.possibleShortcut
+      .push(
+        new WantedShortCut([
+          firstKey.clone(),
+          party.random([...(party.possibleKeys.filter(k => k !== firstKey)),
+            ...party.possibleCharacters]).clone()
+        ]));
   }
-  party.possibleWanteds = [...party.possibleClics, ...party.possibleCharacters, ...party.possibleKeys, ...party.possibleShortcut];
 
+
+  party.possibleWanteds = [...party.possibleClics, ...party.possibleCharacters, ...party.possibleKeys, ...party.possibleShortcut];
+  party.possibleWanteds
+    .push(new WantedText('hello world'));
+  party.possibleWanteds
+    .push(new WantedText('npm run start'));
+  party.possibleWanteds
+    .push(new WantedText('console.log()'));
+  party.possibleWanteds
+    .push(new WantedText('maven'));
   return party;
 }
 
 export class PartyRunner extends Party {
   play = true;
-
-
   flow: Subject<Wanted> = new Subject<Wanted>();
+  maxMissed = 7;
 
   constructor() {
     super();
-
   }
 
   randomBetween(min, max): number {
@@ -169,7 +198,6 @@ export class PartyRunner extends Party {
 
   run(): void {
     this.runIteration();
-
   }
 
   random<T>(arr: T[]): T {
@@ -177,50 +205,18 @@ export class PartyRunner extends Party {
   }
 
   runIteration(): void {
-
     setTimeout(() => {
-
-
       const next = this.random(this.possibleWanteds).clone();
       next.isCurrentlySatisfied = false;
-      next.timeout = this.randomBetween(9000, 16000);
+      next.timeout = this.randomBetween(this.minTimeout, this.maxTimeout);
       next.position = {x: this.randomBetween(10, 90), y: this.randomBetween(10, 90)};
       next.destination = {x: this.randomBetween(10, 90), y: this.randomBetween(10, 90)};
       this.flow.next(next);
       if (this.play) {
         this.runIteration();
       }
-    }, this.randomBetween(this.minTimeout, this.maxTimeout));
+    }, this.randomBetween(this.minBetween, this.maxBetween));
 
   }
 
-}
-
-export function maybeDoneBuilder(wanted: Wanted | WantedShortCut | WantedKeyPress | WantedComposite): (Event) => boolean {
-  return ($event: Event): boolean => {
-
-    if (wanted instanceof WantedClick) {
-      if ($event instanceof MouseEvent && $event.type === 'click') {
-        return true;
-      }
-    }
-    if (wanted instanceof WantedShortCut) {
-      if ($event instanceof KeyboardEvent) {
-        return wanted.keys.includes($event.code);
-      }
-    }
-    if (wanted instanceof WantedKeyPress) {
-      if ($event instanceof KeyboardEvent) {
-        console.log($event.key);
-        return wanted.key === $event.key;
-      }
-    }
-    if (wanted instanceof WantedComposite) {
-
-      console.log('composite' + wanted.isCurrentlySatisfied);
-      return wanted.isCurrentlySatisfied;
-
-    }
-    return false;
-  };
 }

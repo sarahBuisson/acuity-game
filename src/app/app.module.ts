@@ -18,10 +18,13 @@ import {WantWrapperComponent} from './game/want/want-wrapper.component';
 import { TitleComponent } from './title/title.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {MatCheckboxModule} from '@angular/material/checkbox';
+import {WantShortcutComponent} from './game/want-shortcut/want-shortcut.component';
+import {WantTextComponent} from './game/want-text/want-text.component';
+import { ScoreComponent } from './game/score/score.component';
 
 const routes: Routes = [
   {path: 'game', component: GameComponent},
-  {path: 'standardParty', component: GameComponent, data: {currentParty: initPartyRunner(new PartyConfig())}},
+  {path: 'play', component: GameComponent, data: {currentParty: initPartyRunner(new PartyConfig())}},
   {path: 'new', component: PartyEditorComponent},
   {path: 'menu', component: MenuComponent},
   { path: '**', component: MenuComponent },
@@ -36,9 +39,12 @@ const routes: Routes = [
     WantClickComponent,
     WantKeyComponent,
     WantCompositeComponent,
+    WantShortcutComponent,
+    WantTextComponent,
     PartyEditorComponent,
     MenuComponent,
-    TitleComponent
+    TitleComponent,
+    ScoreComponent
   ],
     imports: [
         BrowserModule,
