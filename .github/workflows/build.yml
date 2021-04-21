@@ -23,7 +23,7 @@ jobs:
           yarn install
       - name: Build front
         run: |
-          ng build --prod --base-href /${BRANCH_NAME}/short-em-cut/
+          ng build --prod --base-href /short-em-cut/${BRANCH_NAME}/short-em-cut/
           ls dist
           cp ./dist/short-em-cut/index.html ./dist/short-em-cut/404.html
           mkdir ./website
