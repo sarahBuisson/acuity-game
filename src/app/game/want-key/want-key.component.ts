@@ -39,7 +39,7 @@ export class WantKeyComponent extends AbstractWantComponent<WantedKeyPress> impl
   }
 
   public maybeDone($event: Event): boolean {
-    return $event instanceof KeyboardEvent && $event.key === this.want.key;
+    return $event instanceof KeyboardEvent && $event.key.toLowerCase() === this.want.key.toLowerCase();
   }
 
   keyLabel(): string {

@@ -1,9 +1,9 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {WantTextComponent} from './want-text.component';
-import {WantedKeyPress} from '../../../domain/model';
+import {WantedKeyPress, WantedText} from '../../../domain/model';
 
-describe('WantKeyComponent', () => {
+describe('WantTextComponent', () => {
   let component: WantTextComponent;
   let fixture: ComponentFixture<WantTextComponent>;
 
@@ -25,17 +25,19 @@ describe('WantKeyComponent', () => {
   });
 
 
-  it('should be done when press  e key', () => {
+  it('should be done when press e key', () => {
     // Init
     component.isDone = () => {
     };
     component.maybeDone = ($event) => true;
     spyOn(component, 'isDone').and.callThrough();
     spyOn(component, 'maybeDone').and.callThrough();
+
     expect(component).toBeTruthy();
 
     // Given
-    component.want = new WantedKeyPress('e');
+    component.want = new WantedText('e');
+    spyOn(component.want, 'isStillDoable').and.returnValue(true);
     fixture.detectChanges();
 
     // When
@@ -62,7 +64,8 @@ describe('WantKeyComponent', () => {
     expect(component).toBeTruthy();
 
     // Given
-    component.want = new WantedKeyPress('e');
+    component.want = new WantedText('e');
+    spyOn(component.want, 'isStillDoable').and.returnValue(true);
     fixture.detectChanges();
 
     // When

@@ -47,12 +47,18 @@ export abstract class AbstractWantComponent<T extends Wanted> {
   }
 
   protected process($event: Event): void {
-    if (this.maybeDone($event)) {
-      this.want.isCurrentlySatisfied = true;
-      this.isDone(this.want);
-      this.intervalService.setTimeout(2000, () => {
-        this.want.isCurrentlySatisfied = false;
-      }, this);
+    try {
+      if (this.want.isStillDoable() && this.maybeDone($event)) {
+        this.want.isCurrentlySatisfied = true;
+        this.isDone(this.want);
+        this.intervalService.setTimeout(2000, () => {
+          this.want.isCurrentlySatisfied = false;
+        }, this);
+      }
+    } catch (e) {
+      console.error('process error');
+      console.log($event);
+      console.error(e);
     }
   }
 

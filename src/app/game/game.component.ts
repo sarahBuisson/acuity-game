@@ -62,8 +62,8 @@ import {IntervalService} from './interval.service';
           </li>
         </ul>
       </div>
-      <app-score [score]="score" [missed]="missed" *ngIf="isPartyLost()"></app-score>
-    </div>`,
+
+    </div> <app-score [score]="score" [missed]="missed" *ngIf="isPartyLost()"></app-score>`,
 
   styleUrls: ['./game.scss']
 })
@@ -112,8 +112,8 @@ export class GameComponent implements OnInit, OnDestroy, OnChanges {
       if (!this.pause && !this.isPartyLost()) {
         this.stillWanted.forEach(w => w.time += 10);
       }
-      this.missed += this.stillWanted.filter(w => w.time >= w.timeout).length;
-      this.stillWanted = this.stillWanted.filter(w => w.time < w.timeout);
+      this.missed += this.stillWanted.filter(w => w.isMissed()).length;
+      this.stillWanted = this.stillWanted.filter(w => w.time < w.timeout );
       this.ref.detectChanges();
     }, this);
 

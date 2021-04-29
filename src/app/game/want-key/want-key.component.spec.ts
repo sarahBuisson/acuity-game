@@ -44,6 +44,7 @@ describe('WantKeyComponent', () => {
       .nativeElement
       .dispatchEvent(keyboardEvent);
 
+    spyOn(component.want, 'isStillDoable').and.returnValue(true);
     fixture.detectChanges();
     component.handleKeyboardDownEvent(keyboardEvent);
 
@@ -63,6 +64,7 @@ describe('WantKeyComponent', () => {
 
     // Given
     component.want = new WantedKeyPress('e');
+    spyOn(component.want, 'isStillDoable').and.returnValue(true);
     fixture.detectChanges();
 
     // When

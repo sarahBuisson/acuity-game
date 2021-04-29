@@ -29,6 +29,7 @@ describe('WantClickComponent', () => {
     fixture.detectChanges();
     spyOn(component, 'isDone').and.callThrough();
     spyOn(component, 'maybeDone').and.callThrough();
+    spyOn(component.want, 'isStillDoable').and.returnValue(true);
     expect(component).toBeTruthy();
 
     // Given

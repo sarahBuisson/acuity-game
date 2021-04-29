@@ -1,0 +1,19 @@
+@import "../../variables";
+:host{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+ul {
+  @extend .bordered;
+
+  width: 500px;
+  margin: 40px;
+  padding: $emptyZone;
+
+}
+
+li{
+  display: block;
+}

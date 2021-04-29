@@ -42,13 +42,14 @@ export class WantCompositeComponent extends AbstractWantComponent<WantedComposit
 
   setPartDone(wanted: Wanted): () => void {
     return () => {
-      wanted.isCurrentlySatisfied = true;
-      this.isDone(wanted);
-      if (this.want.wanteds.every(w => w.isCurrentlySatisfied)) {
-        this.isDone(this.want);
-        console.log('partdone');
+      if (wanted.isStillDoable()) {
+        wanted.isCurrentlySatisfied = true;
+        this.isDone(wanted);
+        if (this.want.wanteds.every(w => w.isCurrentlySatisfied)) {
+          this.isDone(this.want);
+          console.log('partdone');
+        }
       }
-
     };
   }
 

@@ -6,7 +6,7 @@ import {AbstractWantComponent} from '../want/want-abstract.component';
 @Component({
   selector: 'app-want-shortcut',
   template: `
-    <div class="main" (click)="ngClick($event)">
+    <div class="main">
       <ng-container *ngFor="let wantedPart of want.wanteds;  index as index">
         <span *ngIf="index!=0">+</span>
         <app-want-click *ngIf="isWantedClick(wantedPart)"
@@ -27,8 +27,6 @@ import {AbstractWantComponent} from '../want/want-abstract.component';
   }`]
 })
 export class WantShortcutComponent extends AbstractWantComponent<WantedComposite> implements OnInit {
-
-
   stillWanted: Wanted[] = new Array<Wanted>();
 
   constructor(protected intervalService: IntervalService) {
@@ -41,10 +39,12 @@ export class WantShortcutComponent extends AbstractWantComponent<WantedComposite
 
   setPartDone(wanted: Wanted): () => void {
     return () => {
-      wanted.isCurrentlySatisfied = true;
-      this.intervalService.setTimeout(1000, () => {
-        wanted.isCurrentlySatisfied = false;
-      }, this);
+      if (wanted.isStillDoable()) {
+        wanted.isCurrentlySatisfied = true;
+        this.intervalService.setTimeout(1000, () => {
+          wanted.isCurrentlySatisfied = false;
+        }, this);
+      }
       if (this.want.wanteds.every(w => w.isCurrentlySatisfied)) {
         this.isDone(this.want);
         console.log('partdone');
@@ -61,15 +61,6 @@ export class WantShortcutComponent extends AbstractWantComponent<WantedComposite
   isWantedClick(wanted: Wanted): boolean {
     return wanted instanceof WantedClick;
 
-  }
-
-  ngClick($event: Event): void {
-    this.process($event);
-  }
-
-  @HostListener('document:keydown', ['$event'])
-  handleKeyboardEvent($event: KeyboardEvent): void {
-    this.process($event);
   }
 
   public maybeDone($event: Event): boolean {

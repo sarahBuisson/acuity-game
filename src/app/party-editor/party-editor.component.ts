@@ -6,7 +6,7 @@ import {Router} from '@angular/router';
 @Component({
   selector: 'app-party-editor',
   template: `
-    <ul>
+    <ul class="bordered">
       <li>
         <mat-checkbox  [(ngModel)]="useClick"></mat-checkbox>include click
 
@@ -28,10 +28,10 @@ import {Router} from '@angular/router';
 
         <mat-checkbox [(ngModel)]="useShortcut"></mat-checkbox>
 
-        <label>    include shortcut</label></li>
+        <label>include shortcut</label></li>
       <button (click)="createParty()">create</button>
     </ul>`,
-  styleUrls: ['./party-editor.component.css']
+  styleUrls: ['./party-editor.component.scss']
 })
 export class PartyEditorComponent extends PartyConfig implements OnInit {
 

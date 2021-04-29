@@ -5,8 +5,18 @@ import {IntervalService} from '../interval.service';
 @Component({
   selector: 'app-want-wrapper',
   template: `
-    <div><label>{{want?.label}}</label>
-      <ng-content></ng-content>
+    <div>
+      <ng-container *ngIf="want.isStillDoable()">
+        <label>{{want?.label}}</label>
+        <ng-content></ng-content>
+      </ng-container>
+      <ng-container *ngIf="!want.isStillDoable()">
+        <ng-container *ngIf="!want.isMissed()">
+          <span>Yeah !</span>
+        </ng-container>
+        <ng-container *ngIf="want.isMissed();" >
+          <span>Too bad...</span></ng-container>
+      </ng-container>
     </div>`,
   styles: [`div {
     border-radius: 5px;
@@ -20,12 +30,13 @@ import {IntervalService} from '../interval.service';
     display: block;
     color: grey;
     font-size: smaller;
-    background-color: rgba(255, 255, 255, .5);
+    background-color: #FAFAFAAA;
     border-radius: 2px;
     padding: 5px;
     left: -15px;
     top: -15px;
     width: auto;
+
   }
 
   :host {

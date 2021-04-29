@@ -1,15 +1,38 @@
 import {Subject} from 'rxjs';
 
 export abstract class Wanted {
+
   private PisCurrentlySatisfied = false;
-  timeout = -1;
-  time = 0;
+
+  // tslint:disable-next-line:variable-name
+  protected _timeout = -1;
+
+  // tslint:disable-next-line:variable-name
+  protected _time = 0;
+
+  public get timeout(): number {
+    return this._timeout;
+  }
+
+  public set timeout(value) {
+    this._timeout = value;
+  }
+
+
+  public get time(): number {
+    return this._time;
+  }
+
+  public set time(value) {
+    this._time = value;
+  }
+
   public position: { x: number, y: number } = {x: 0, y: 0};
   public destination: { x: number, y: number } = {x: 0, y: 0};
   public abstract label: string;
 
   public get remainingPercentOfTime(): number {
-    return (this.timeout - this.time) / this.timeout;
+    return (this.timeout - this._time) / this.timeout;
   }
 
   public get isCurrentlySatisfied(): boolean {
@@ -24,6 +47,14 @@ export abstract class Wanted {
   }
 
   public abstract clone(): Wanted;
+
+  public isStillDoable(): boolean {
+    return !this.isCurrentlySatisfied && this._time < this.timeout;
+  }
+
+  public isMissed(): boolean {
+    return this._time >= this.timeout && !this.isCurrentlySatisfied;
+  }
 }
 
 export class WantedClick extends Wanted {
@@ -77,6 +108,24 @@ export class WantedComposite extends Wanted {
 export class WantedShortCut extends Wanted {
   label = 'shortcut';
 
+  public set timeout(value) {
+    super._timeout = value;
+    this.wanteds.forEach(w => w.timeout = value);
+  }
+
+  public get timeout(): number {
+    return this._timeout;
+  }
+
+  public set time(value) {
+    this._time = value;
+    this.wanteds.forEach(w => w.time = value);
+  }
+
+  public get time(): number {
+    return this._time;
+  }
+
   public get isCurrentlySatisfied(): boolean {
     return this.wanteds.every(wanted => wanted.isCurrentlySatisfied);
   }
@@ -102,11 +151,11 @@ export class PartyConfig {
     key: ' ',
     label: 'Espace'
   }];
-  useTexts = false;
+  useTexts = true;
   texts: string[] = ['hello', 'cd ../var', 'root'];
   useKeySuite = false;
 
-  useShortcut = false;
+  useShortcut = true;
   shortCut: (string[] | { keys: string[], label: string })[] = [['Control', 'Alt'], ['Control', 'ArrowLeft']];
   nbrOfRandomShortcut = 10;
 }
@@ -126,33 +175,30 @@ export class Party extends PartyConfig {
 
 export function initPartyRunner(config: PartyConfig): PartyRunner {
   const party = new PartyRunner();
-  if (config.useClick) {
-    for (let i = 0; i < config.nbrOfClick; i++) {
-      party.possibleClics.push(new WantedClick(party.randomBetween(10, 100)));
+  for (let i = 0; i < config.nbrOfClick; i++) {
+    party.possibleClics.push(new WantedClick(party.randomBetween(10, 100)));
+  }
 
-    }
-  }
-  if (config.useKey) {
-    for (let i = 0; i < 26; i++) {
-      party.possibleCharacters.push(new WantedKeyPress(String.fromCharCode(97 + i)));
+  for (let i = 0; i < 26; i++) {
+    party.possibleCharacters.push(new WantedKeyPress(String.fromCharCode(97 + i)));
 
+  }
+  party.possibleKeys.push(new WantedKeyPress('Control'));
+  party.possibleKeys.push(new WantedKeyPress('ArrowLeft'));
+  party.possibleKeys.push(new WantedKeyPress('ArrowUp'));
+  party.possibleKeys.push(new WantedKeyPress('ArrowDown'));
+  party.possibleKeys.push(new WantedKeyPress('ArrowRight'));
+  party.possibleKeys.push(new WantedKeyPress('Alt'));
+  party.possibleKeys.push(new WantedKeyPress('Enter'));
+
+
+  config.shortCut.forEach((s) => {
+    if (s instanceof Array) {
+      party.possibleShortcut
+        .push(new WantedShortCut(s.map(w => new WantedKeyPress(w))));
     }
-    party.possibleKeys.push(new WantedKeyPress('Control'));
-    party.possibleKeys.push(new WantedKeyPress('ArrowLeft'));
-    party.possibleKeys.push(new WantedKeyPress('ArrowUp'));
-    party.possibleKeys.push(new WantedKeyPress('ArrowDown'));
-    party.possibleKeys.push(new WantedKeyPress('ArrowRight'));
-    party.possibleKeys.push(new WantedKeyPress('Alt'));
-    party.possibleKeys.push(new WantedKeyPress('Enter'));
-  }
-  if (config.useShortcut) {
-    config.shortCut.forEach((s) => {
-      if (s instanceof Array) {
-        party.possibleShortcut
-          .push(new WantedShortCut(s.map(w => new WantedKeyPress(w))));
-      }
-    });
-  }
+  });
+
 
   for (let i = 0; i < config.nbrOfRandomShortcut; i++) {
     const firstKey = party.random(party.possibleKeys);
@@ -169,17 +215,27 @@ export function initPartyRunner(config: PartyConfig): PartyRunner {
             ...party.possibleCharacters]).clone()
         ]));
   }
+  party.possibleWanteds = [];
+  if (config.useClick) {
+    party.possibleWanteds = [...party.possibleWanteds, ...party.possibleClics];
+  }
+  if (config.useKey) {
+    party.possibleWanteds = [...party.possibleWanteds, ...party.possibleCharacters, ...party.possibleKeys];
+  }
+  if (config.useShortcut) {
+    party.possibleWanteds = [...party.possibleWanteds, ...party.possibleShortcut];
+  }
+  if (config.useTexts) {
+    party.possibleWanteds
+      .push(new WantedText('hello world'));
+    party.possibleWanteds
+      .push(new WantedText('npm run start'));
+    party.possibleWanteds
+      .push(new WantedText('console.log()'));
+    party.possibleWanteds
+      .push(new WantedText('maven'));
 
-
-  party.possibleWanteds = [...party.possibleClics, ...party.possibleCharacters, ...party.possibleKeys, ...party.possibleShortcut];
-  party.possibleWanteds
-    .push(new WantedText('hello world'));
-  party.possibleWanteds
-    .push(new WantedText('npm run start'));
-  party.possibleWanteds
-    .push(new WantedText('console.log()'));
-  party.possibleWanteds
-    .push(new WantedText('maven'));
+  }
   return party;
 }
 
